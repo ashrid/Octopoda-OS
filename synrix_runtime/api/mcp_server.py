@@ -288,6 +288,14 @@ class _LocalAgentAdapter:
     def delete(self):
         self._rt.shutdown()
 
+    def get_loop_status(self):
+        result = self._rt.get_loop_status()
+        return result
+
+    def get_loop_history(self, hours=24):
+        result = self._rt.get_loop_history(hours)
+        return result
+
 
 class _LocalClientAdapter:
     """Wraps local runtime access to match the cloud Octopoda client interface."""

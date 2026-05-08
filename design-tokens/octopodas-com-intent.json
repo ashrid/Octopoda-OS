@@ -1,0 +1,56 @@
+{
+  "pageIntent": {
+    "type": "dashboard",
+    "confidence": 0.6,
+    "path": "/dashboard/shared",
+    "title": "Log In | Octopoda",
+    "description": "Sign in to the Octopoda dashboard to monitor agents, inspect memory, review loop alerts, recover crashes, and manage production agent operations.",
+    "signals": [
+      {
+        "kind": "url",
+        "type": "dashboard",
+        "weight": 0.8
+      },
+      {
+        "kind": "title",
+        "type": "auth",
+        "weight": 0.5
+      }
+    ],
+    "alternates": [
+      {
+        "type": "auth",
+        "score": 0.5
+      }
+    ],
+    "needsSmart": false
+  },
+  "sectionRoles": {
+    "sections": [
+      {
+        "index": 0,
+        "tag": "section",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": null,
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "w": 1280,
+          "h": 0
+        },
+        "buttonCount": 0,
+        "cardCount": 0,
+        "slots": {},
+        "needsSmart": true
+      }
+    ],
+    "counts": {
+      "content": 1
+    },
+    "readingOrder": [
+      "content"
+    ]
+  }
+}

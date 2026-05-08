@@ -1,0 +1,29 @@
+Build a dashboard page with this exact visual language.
+COLORS:
+  #ebebeb
+  #141414
+  #000000
+  #f97015
+  #2c2421
+  #756157
+  #ffffff
+  #493d36
+  #e8d6c9
+  #d2bcac
+  #988881
+  #fff5eb
+  #fba66a
+  #67554c
+FONTS: [object Object], [object Object]
+SPACING: 4, 40, 48, 64, 112
+RADIUS: 12, 24
+SHADOWS: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px | rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.15) 0px 20px 60px -20px | rgba(249, 112, 21, 0.5) 0px 8px 24px -8px
+MATERIAL LANGUAGE: flat
+VOICE: Tone: neutral · Headings: unknown · CTA verbs: [object Object], [object Object]
+LIBRARY: Use plain Tailwind CSS without a component library.
+SECTIONS (in order):
+- hero
+- features
+- cta
+- footer
+Use Tailwind. Match these tokens exactly. Keep the material language consistent.

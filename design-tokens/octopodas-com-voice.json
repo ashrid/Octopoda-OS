@@ -1,0 +1,31 @@
+{
+  "tone": "neutral",
+  "pronoun": "third-person",
+  "headingStyle": "unknown",
+  "headingLengthClass": "tight",
+  "ctaVerbs": [
+    {
+      "value": "forgot",
+      "count": 1
+    },
+    {
+      "value": "continue",
+      "count": 1
+    }
+  ],
+  "buttonPatterns": [
+    {
+      "value": "forgot password?",
+      "count": 1
+    },
+    {
+      "value": "continue",
+      "count": 1
+    }
+  ],
+  "sampleHeadings": [],
+  "stats": {
+    "buttons": 2,
+    "headings": 0
+  }
+}

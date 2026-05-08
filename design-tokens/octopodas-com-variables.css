@@ -1,0 +1,163 @@
+:root {
+  /* Colors — Primary */
+  --color-primary: #f97015;
+  --color-secondary: #fba66a;
+  --color-accent: #e8d6c9;
+
+  /* Colors — Neutrals */
+  --color-neutral-50: #ebebeb;
+  --color-neutral-100: #141414;
+  --color-neutral-200: #000000;
+  --color-neutral-300: #2c2421;
+  --color-neutral-400: #756157;
+  --color-neutral-500: #ffffff;
+  --color-neutral-600: #493d36;
+  --color-neutral-700: #988881;
+  --color-neutral-800: #fff5eb;
+  --color-neutral-900: #67554c;
+
+  /* Colors — Backgrounds */
+  --color-bg: #14141f;
+  --color-bg-1: #fff5eb;
+  --color-bg-2: #ffffff;
+
+  /* Colors — Text */
+  --color-text: #000000;
+  --color-text-1: #141414;
+  --color-text-2: #2c2421;
+  --color-text-3: #67554c;
+  --color-text-4: #f97015;
+
+  /* Typography — Families */
+  --font-sans: 'Inter', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+
+  /* Typography — Scale */
+  --font-size-60: 60px;
+  --font-size-20: 20px;
+  --font-size-18: 18px;
+  --font-size-16: 16px;
+  --font-size-14: 14px;
+  --font-size-12: 12px;
+
+  /* Spacing */
+  --spacing-4: 4px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-64: 64px;
+  --spacing-112: 112px;
+
+  /* Border Radius */
+  --radius-lg: 12px;
+  --radius-xl: 24px;
+
+  /* Box Shadows */
+  --shadow-sm: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+  --shadow-sm: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.15) 0px 20px 60px -20px;
+  --shadow-lg: rgba(249, 112, 21, 0.5) 0px 8px 24px -8px;
+
+  /* Original Site Variables */
+  /* — colors — */
+  --foreground: 0 0% 8%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 8%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 8%;
+  --primary: 24 95% 53%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 8%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 24 95% 53%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 92%;
+  --ring: 24 95% 53%;
+  --dark-bg: 228 12% 8%;
+  --dark-border: 228 10% 16%;
+  --dark-muted: 0 0% 55%;
+  --dash-bg: 228 12% 7%;
+  --dash-card: 228 12% 12%;
+  --dash-card-hover: 228 12% 14%;
+  --dash-border: 228 10% 18%;
+  --dash-border-subtle: 228 10% 14%;
+  --dash-text-muted: 220 10% 50%;
+  --code-bg: 0 0% 6%;
+  --code-border: 0 0% 14%;
+  --code-foreground: 0 0% 75%;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-inset: ;
+  --tw-border-spacing-x: 0;
+  --tw-ring-color: rgb(59 130 246 / .5);
+  --tw-ring-offset-color: #fff;
+  --tw-ring-offset-width: 0px;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-border-spacing-y: 0;
+  /* — spacing — */
+  --tw-numeric-spacing: ;
+  --tw-contain-size: ;
+  /* — typography — */
+  --dark-text: 0 0% 98%;
+  --dash-text: 0 0% 95%;
+  --dash-text-dim: 220 10% 35%;
+  /* — shadows — */
+  --tw-drop-shadow: ;
+  --tw-shadow: 0 0 #0000;
+  /* — radii — */
+  --radius: .75rem;
+  /* — other — */
+  --background: 0 0% 100%;
+  --input: 0 0% 92%;
+  --sunset-orange: 24 95% 53%;
+  --sunset-amber: 35 95% 55%;
+  --sunset-peach: 25 100% 94%;
+  --dark-surface: 228 12% 11%;
+  --dash-surface: 228 12% 10%;
+  --tw-backdrop-sepia: ;
+  --tw-sepia: ;
+  --tw-ordinal: ;
+  --tw-backdrop-saturate: ;
+  --tw-contain-style: ;
+  --tw-backdrop-invert: ;
+  --tw-brightness: ;
+  --tw-backdrop-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-scale-y: 1;
+  --tw-pan-y: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-brightness: ;
+  --tw-pan-x: ;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-contrast: ;
+  --tw-skew-x: 0;
+  --tw-backdrop-blur: ;
+  --tw-translate-x: 0;
+  --tw-gradient-via-position: ;
+  --tw-saturate: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-grayscale: ;
+  --tw-scale-x: 1;
+  --tw-backdrop-hue-rotate: ;
+  --tw-gradient-to-position: ;
+  --tw-numeric-fraction: ;
+  --tw-skew-y: 0;
+  --tw-slashed-zero: ;
+  --tw-blur: ;
+  --tw-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-numeric-figure: ;
+  --tw-gradient-from-position: ;
+  --tw-pinch-zoom: ;
+  --tw-contain-paint: ;
+  --tw-contain-layout: ;
+  /* — semantic — */
+  success: [object Object];
+  warning: [object Object];
+  error: [object Object];
+  info: [object Object];
+
+}

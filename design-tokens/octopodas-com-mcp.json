@@ -1,0 +1,387 @@
+{
+  "colors": {
+    "all": [
+      {
+        "hex": "#ebebeb",
+        "rgb": {
+          "r": 235,
+          "g": 235,
+          "b": 235,
+          "a": 1
+        },
+        "hsl": {
+          "h": 0,
+          "s": 0,
+          "l": 92
+        },
+        "count": 105,
+        "contexts": [
+          "border"
+        ]
+      },
+      {
+        "hex": "#141414",
+        "rgb": {
+          "r": 20,
+          "g": 20,
+          "b": 20,
+          "a": 1
+        },
+        "hsl": {
+          "h": 0,
+          "s": 0,
+          "l": 8
+        },
+        "count": 35,
+        "contexts": [
+          "text",
+          "background"
+        ]
+      },
+      {
+        "hex": "#000000",
+        "rgb": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 1
+        },
+        "hsl": {
+          "h": 0,
+          "s": 0,
+          "l": 0
+        },
+        "count": 33,
+        "contexts": [
+          "text"
+        ]
+      },
+      {
+        "hex": "#f97015",
+        "rgb": {
+          "r": 249,
+          "g": 112,
+          "b": 21,
+          "a": 1
+        },
+        "hsl": {
+          "h": 24,
+          "s": 95,
+          "l": 53
+        },
+        "count": 15,
+        "contexts": [
+          "text"
+        ]
+      },
+      {
+        "hex": "#2c2421",
+        "rgb": {
+          "r": 44,
+          "g": 36,
+          "b": 33,
+          "a": 1
+        },
+        "hsl": {
+          "h": 16,
+          "s": 14,
+          "l": 15
+        },
+        "count": 8,
+        "contexts": [
+          "text"
+        ]
+      },
+      {
+        "hex": "#756157",
+        "rgb": {
+          "r": 117,
+          "g": 97,
+          "b": 87,
+          "a": 1
+        },
+        "hsl": {
+          "h": 20,
+          "s": 15,
+          "l": 40
+        },
+        "count": 8,
+        "contexts": [
+          "text"
+        ]
+      },
+      {
+        "hex": "#ffffff",
+        "rgb": {
+          "r": 255,
+          "g": 255,
+          "b": 255,
+          "a": 1
+        },
+        "hsl": {
+          "h": 0,
+          "s": 0,
+          "l": 100
+        },
+        "count": 7,
+        "contexts": [
+          "background",
+          "text"
+        ]
+      },
+      {
+        "hex": "#493d36",
+        "rgb": {
+          "r": 73,
+          "g": 61,
+          "b": 54,
+          "a": 1
+        },
+        "hsl": {
+          "h": 22,
+          "s": 15,
+          "l": 25
+        },
+        "count": 6,
+        "contexts": [
+          "text"
+        ]
+      },
+      {
+        "hex": "#e8d6c9",
+        "rgb": {
+          "r": 232,
+          "g": 214,
+          "b": 201,
+          "a": 1
+        },
+        "hsl": {
+          "h": 25,
+          "s": 40,
+          "l": 85
+        },
+        "count": 5,
+        "contexts": [
+          "border"
+        ]
+      },
+      {
+        "hex": "#d2bcac",
+        "rgb": {
+          "r": 210,
+          "g": 188,
+          "b": 172,
+          "a": 1
+        },
+        "hsl": {
+          "h": 25,
+          "s": 30,
+          "l": 75
+        },
+        "count": 2,
+        "contexts": [
+          "text"
+        ]
+      },
+      {
+        "hex": "#988881",
+        "rgb": {
+          "r": 152,
+          "g": 136,
+          "b": 129,
+          "a": 1
+        },
+        "hsl": {
+          "h": 18,
+          "s": 10,
+          "l": 55
+        },
+        "count": 2,
+        "contexts": [
+          "text"
+        ]
+      },
+      {
+        "hex": "#fff5eb",
+        "rgb": {
+          "r": 255,
+          "g": 245,
+          "b": 235,
+          "a": 1
+        },
+        "hsl": {
+          "h": 30,
+          "s": 100,
+          "l": 96
+        },
+        "count": 1,
+        "contexts": [
+          "background"
+        ]
+      },
+      {
+        "hex": "#fba66a",
+        "rgb": {
+          "r": 251,
+          "g": 166,
+          "b": 106,
+          "a": 1
+        },
+        "hsl": {
+          "h": 25,
+          "s": 95,
+          "l": 70
+        },
+        "count": 1,
+        "contexts": [
+          "background"
+        ]
+      },
+      {
+        "hex": "#67554c",
+        "rgb": {
+          "r": 103,
+          "g": 85,
+          "b": 76,
+          "a": 1
+        },
+        "hsl": {
+          "h": 20,
+          "s": 15,
+          "l": 35
+        },
+        "count": 1,
+        "contexts": [
+          "text"
+        ]
+      }
+    ]
+  },
+  "regions": [
+    {
+      "role": "content",
+      "tag": "section",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 0
+      },
+      "heading": null,
+      "buttonCount": 0,
+      "cardCount": 0,
+      "className": null
+    }
+  ],
+  "componentClusters": [
+    {
+      "kind": "input",
+      "structuralHash": "input",
+      "instanceCount": 1,
+      "variants": [
+        {
+          "css": {
+            "background": "rgb(255, 255, 255)",
+            "color": "rgb(44, 36, 33)",
+            "padding": "12px 16px 12px 16px",
+            "borderRadius": "12px",
+            "border": "1px solid rgb(228, 215, 205)",
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "instanceCount": 1
+        }
+      ]
+    },
+    {
+      "kind": "button",
+      "structuralHash": "button",
+      "instanceCount": 2,
+      "variants": [
+        {
+          "css": {
+            "background": "rgba(0, 0, 0, 0)",
+            "color": "rgb(249, 112, 21)",
+            "padding": "0px 0px 0px 0px",
+            "borderRadius": "0px",
+            "border": "0px solid rgb(235, 235, 235)",
+            "fontSize": "12px",
+            "fontWeight": "500"
+          },
+          "instanceCount": 1
+        },
+        {
+          "css": {
+            "background": "rgba(0, 0, 0, 0)",
+            "color": "rgb(255, 255, 255)",
+            "padding": "14px 0px 14px 0px",
+            "borderRadius": "12px",
+            "border": "0px solid rgb(235, 235, 235)",
+            "fontSize": "14px",
+            "fontWeight": "600"
+          },
+          "instanceCount": 1
+        }
+      ]
+    }
+  ],
+  "accessibility": {
+    "remediation": []
+  },
+  "cssHealth": {
+    "sheets": [
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif&display=swap",
+        "totalBytes": 9850,
+        "usedBytes": 0,
+        "unusedBytes": 9850,
+        "unusedPercent": 100
+      },
+      {
+        "url": "https://octopodas.com/assets/index-CgIonClN.css",
+        "totalBytes": 162231,
+        "usedBytes": 9417,
+        "unusedBytes": 152814,
+        "unusedPercent": 94
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap",
+        "totalBytes": 38790,
+        "usedBytes": 0,
+        "unusedBytes": 38790,
+        "unusedPercent": 100
+      }
+    ],
+    "totalBytes": 210871,
+    "usedBytes": 9417,
+    "unusedBytes": 201454,
+    "unusedPercent": 96,
+    "importantCount": 12,
+    "duplicates": 2137,
+    "vendorPrefixes": {
+      "webkit": 49,
+      "moz": 27,
+      "ms": 1,
+      "o": 4
+    },
+    "keyframes": [],
+    "specificity": {
+      "max": [
+        2,
+        9,
+        4
+      ],
+      "average": [
+        0.03,
+        1.63,
+        0.15
+      ],
+      "count": 2523
+    },
+    "issues": [
+      "12 !important rules",
+      "2137 duplicate declarations",
+      "96% unused CSS"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+Clone the design language of this dashboard page and build a fresh equivalent.
+Visual feel: flat. Tone: neutral · Headings: unknown · CTA verbs: [object Object], [object Object]
+Primary palette: #ebebeb, #141414, #000000, #f97015, #2c2421.
+Typography: [object Object], [object Object].
+Corner radius vocabulary: 12, 24.
+Shadow vocabulary: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px | rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.15) 0px 20px 60px -20px | rgba(249, 112, 21, 0.5) 0px 8px 24px -8px.
+Use: Use plain Tailwind CSS without a component library.
+Page structure:
+- hero
+- features
+- social proof
+- cta
+- footer

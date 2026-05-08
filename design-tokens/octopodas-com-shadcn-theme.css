@@ -1,0 +1,24 @@
+/* shadcn/ui Theme — extracted from https://octopodas.com/dashboard/shared */
+/* Paste into your globals.css */
+
+@layer base {
+  :root {
+    --background: 240 22% 10%;
+    --foreground: 0 0% 0%;
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 25 95% 70%;
+    --secondary-foreground: 0 0% 0%;
+    --accent: 25 40% 85%;
+    --accent-foreground: 0 0% 0%;
+    --muted: 20 15% 35%;
+    --muted-foreground: 0 0% 92%;
+    --border: 20 15% 40%;
+    --radius: 12px;
+  }
+  .dark {
+    --background: 240 22% 10%;
+    --foreground: 0 0% 0%;
+    --primary: 24 95% 53%;
+  }
+}

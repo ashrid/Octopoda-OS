@@ -1,0 +1,294 @@
+{
+  "available": true,
+  "roles": {
+    "primary": {
+      "light": "#f97015",
+      "dark": "#f97015"
+    },
+    "secondary": {
+      "light": "#fba66a",
+      "dark": "#fba66a"
+    },
+    "accent": {
+      "light": "#e8d6c9",
+      "dark": "#e8d6c9"
+    }
+  },
+  "variables": {
+    "colors": {
+      "light": {
+        "--foreground": "0 0% 8%",
+        "--card": "0 0% 100%",
+        "--card-foreground": "0 0% 8%",
+        "--popover": "0 0% 100%",
+        "--popover-foreground": "0 0% 8%",
+        "--primary": "24 95% 53%",
+        "--primary-foreground": "0 0% 100%",
+        "--secondary": "0 0% 8%",
+        "--secondary-foreground": "0 0% 100%",
+        "--muted": "0 0% 96%",
+        "--muted-foreground": "0 0% 45%",
+        "--accent": "24 95% 53%",
+        "--accent-foreground": "0 0% 100%",
+        "--destructive": "0 84% 60%",
+        "--destructive-foreground": "0 0% 100%",
+        "--border": "0 0% 92%",
+        "--ring": "24 95% 53%",
+        "--dark-bg": "228 12% 8%",
+        "--dark-border": "228 10% 16%",
+        "--dark-muted": "0 0% 55%",
+        "--dash-bg": "228 12% 7%",
+        "--dash-card": "228 12% 12%",
+        "--dash-card-hover": "228 12% 14%",
+        "--dash-border": "228 10% 18%",
+        "--dash-border-subtle": "228 10% 14%",
+        "--dash-text-muted": "220 10% 50%",
+        "--code-bg": "0 0% 6%",
+        "--code-border": "0 0% 14%",
+        "--code-foreground": "0 0% 75%",
+        "--tw-ring-offset-shadow": "0 0 #0000",
+        "--tw-ring-shadow": "0 0 #0000",
+        "--tw-ring-inset": "",
+        "--tw-border-spacing-x": "0",
+        "--tw-ring-color": "rgb(59 130 246 / .5)",
+        "--tw-ring-offset-color": "#fff",
+        "--tw-ring-offset-width": "0px",
+        "--tw-shadow-colored": "0 0 #0000",
+        "--tw-border-spacing-y": "0"
+      },
+      "dark": {
+        "--foreground": "0 0% 8%",
+        "--card": "0 0% 100%",
+        "--card-foreground": "0 0% 8%",
+        "--popover": "0 0% 100%",
+        "--popover-foreground": "0 0% 8%",
+        "--primary": "24 95% 53%",
+        "--primary-foreground": "0 0% 100%",
+        "--secondary": "0 0% 8%",
+        "--secondary-foreground": "0 0% 100%",
+        "--muted": "0 0% 96%",
+        "--muted-foreground": "0 0% 45%",
+        "--accent": "24 95% 53%",
+        "--accent-foreground": "0 0% 100%",
+        "--destructive": "0 84% 60%",
+        "--destructive-foreground": "0 0% 100%",
+        "--border": "0 0% 92%",
+        "--ring": "24 95% 53%",
+        "--dark-bg": "228 12% 8%",
+        "--dark-border": "228 10% 16%",
+        "--dark-muted": "0 0% 55%",
+        "--dash-bg": "228 12% 7%",
+        "--dash-card": "228 12% 12%",
+        "--dash-card-hover": "228 12% 14%",
+        "--dash-border": "228 10% 18%",
+        "--dash-border-subtle": "228 10% 14%",
+        "--dash-text-muted": "220 10% 50%",
+        "--code-bg": "0 0% 6%",
+        "--code-border": "0 0% 14%",
+        "--code-foreground": "0 0% 75%",
+        "--tw-ring-offset-shadow": "0 0 #0000",
+        "--tw-ring-shadow": "0 0 #0000",
+        "--tw-ring-inset": "",
+        "--tw-border-spacing-x": "0",
+        "--tw-ring-color": "rgb(59 130 246 / .5)",
+        "--tw-ring-offset-color": "#fff",
+        "--tw-ring-offset-width": "0px",
+        "--tw-shadow-colored": "0 0 #0000",
+        "--tw-border-spacing-y": "0"
+      }
+    },
+    "spacing": {
+      "light": {
+        "--tw-numeric-spacing": "",
+        "--tw-contain-size": ""
+      },
+      "dark": {
+        "--tw-numeric-spacing": "",
+        "--tw-contain-size": ""
+      }
+    },
+    "typography": {
+      "light": {
+        "--dark-text": "0 0% 98%",
+        "--dash-text": "0 0% 95%",
+        "--dash-text-dim": "220 10% 35%"
+      },
+      "dark": {
+        "--dark-text": "0 0% 98%",
+        "--dash-text": "0 0% 95%",
+        "--dash-text-dim": "220 10% 35%"
+      }
+    },
+    "shadows": {
+      "light": {
+        "--tw-drop-shadow": "",
+        "--tw-shadow": "0 0 #0000"
+      },
+      "dark": {
+        "--tw-drop-shadow": "",
+        "--tw-shadow": "0 0 #0000"
+      }
+    },
+    "radii": {
+      "light": {
+        "--radius": ".75rem"
+      },
+      "dark": {
+        "--radius": ".75rem"
+      }
+    },
+    "other": {
+      "light": {
+        "--background": "0 0% 100%",
+        "--input": "0 0% 92%",
+        "--sunset-orange": "24 95% 53%",
+        "--sunset-amber": "35 95% 55%",
+        "--sunset-peach": "25 100% 94%",
+        "--dark-surface": "228 12% 11%",
+        "--dash-surface": "228 12% 10%",
+        "--tw-backdrop-sepia": "",
+        "--tw-sepia": "",
+        "--tw-ordinal": "",
+        "--tw-backdrop-saturate": "",
+        "--tw-contain-style": "",
+        "--tw-backdrop-invert": "",
+        "--tw-brightness": "",
+        "--tw-backdrop-grayscale": "",
+        "--tw-hue-rotate": "",
+        "--tw-scale-y": "1",
+        "--tw-pan-y": "",
+        "--tw-backdrop-contrast": "",
+        "--tw-backdrop-brightness": "",
+        "--tw-pan-x": "",
+        "--tw-translate-y": "0",
+        "--tw-rotate": "0",
+        "--tw-contrast": "",
+        "--tw-skew-x": "0",
+        "--tw-backdrop-blur": "",
+        "--tw-translate-x": "0",
+        "--tw-gradient-via-position": "",
+        "--tw-saturate": "",
+        "--tw-scroll-snap-strictness": "proximity",
+        "--tw-grayscale": "",
+        "--tw-scale-x": "1",
+        "--tw-backdrop-hue-rotate": "",
+        "--tw-gradient-to-position": "",
+        "--tw-numeric-fraction": "",
+        "--tw-skew-y": "0",
+        "--tw-slashed-zero": "",
+        "--tw-blur": "",
+        "--tw-invert": "",
+        "--tw-backdrop-opacity": "",
+        "--tw-numeric-figure": "",
+        "--tw-gradient-from-position": "",
+        "--tw-pinch-zoom": "",
+        "--tw-contain-paint": "",
+        "--tw-contain-layout": ""
+      },
+      "dark": {
+        "--background": "0 0% 100%",
+        "--input": "0 0% 92%",
+        "--sunset-orange": "24 95% 53%",
+        "--sunset-amber": "35 95% 55%",
+        "--sunset-peach": "25 100% 94%",
+        "--dark-surface": "228 12% 11%",
+        "--dash-surface": "228 12% 10%",
+        "--tw-backdrop-sepia": "",
+        "--tw-sepia": "",
+        "--tw-ordinal": "",
+        "--tw-backdrop-saturate": "",
+        "--tw-contain-style": "",
+        "--tw-backdrop-invert": "",
+        "--tw-brightness": "",
+        "--tw-backdrop-grayscale": "",
+        "--tw-hue-rotate": "",
+        "--tw-scale-y": "1",
+        "--tw-pan-y": "",
+        "--tw-backdrop-contrast": "",
+        "--tw-backdrop-brightness": "",
+        "--tw-pan-x": "",
+        "--tw-translate-y": "0",
+        "--tw-rotate": "0",
+        "--tw-contrast": "",
+        "--tw-skew-x": "0",
+        "--tw-backdrop-blur": "",
+        "--tw-translate-x": "0",
+        "--tw-gradient-via-position": "",
+        "--tw-saturate": "",
+        "--tw-scroll-snap-strictness": "proximity",
+        "--tw-grayscale": "",
+        "--tw-scale-x": "1",
+        "--tw-backdrop-hue-rotate": "",
+        "--tw-gradient-to-position": "",
+        "--tw-numeric-fraction": "",
+        "--tw-skew-y": "0",
+        "--tw-slashed-zero": "",
+        "--tw-blur": "",
+        "--tw-invert": "",
+        "--tw-backdrop-opacity": "",
+        "--tw-numeric-figure": "",
+        "--tw-gradient-from-position": "",
+        "--tw-pinch-zoom": "",
+        "--tw-contain-paint": "",
+        "--tw-contain-layout": ""
+      }
+    },
+    "dependencies": {
+      "light": {},
+      "dark": {}
+    },
+    "semantic": {
+      "light": {
+        "success": {},
+        "warning": {
+          "--sunset-amber": "35 95% 55%"
+        },
+        "error": {
+          "--destructive": "0 84% 60%",
+          "--destructive-foreground": "0 0% 100%",
+          "--tw-shadow-colored": "0 0 #0000"
+        },
+        "info": {}
+      },
+      "dark": {
+        "success": {},
+        "warning": {
+          "--sunset-amber": "35 95% 55%"
+        },
+        "error": {
+          "--destructive": "0 84% 60%",
+          "--destructive-foreground": "0 0% 100%",
+          "--tw-shadow-colored": "0 0 #0000"
+        },
+        "info": {}
+      }
+    }
+  },
+  "pairedVarCount": 8,
+  "audit": {
+    "missingInDark": [],
+    "missingInLight": [],
+    "coverage": "paired"
+  },
+  "tailwind": {
+    "darkMode": "class",
+    "theme": {
+      "extend": {
+        "colors": {
+          "primary": {
+            "DEFAULT": "#f97015",
+            "dark": "#f97015"
+          },
+          "secondary": {
+            "DEFAULT": "#fba66a",
+            "dark": "#fba66a"
+          },
+          "accent": {
+            "DEFAULT": "#e8d6c9",
+            "dark": "#e8d6c9"
+          }
+        }
+      }
+    }
+  }
+}

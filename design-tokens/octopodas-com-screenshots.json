@@ -1,0 +1,48 @@
+{
+  "components": [
+    {
+      "cluster": "input--outline--xl",
+      "variant": 0,
+      "path": "screenshots/input-outline-xl-0.png",
+      "bounds": {
+        "w": 430,
+        "h": 46
+      },
+      "kind": "input",
+      "variantHint": "outline",
+      "sizeHint": "xl",
+      "retina": true
+    },
+    {
+      "cluster": "button--default--xs",
+      "variant": 0,
+      "path": "screenshots/button-default-xs-0.png",
+      "bounds": {
+        "w": 101,
+        "h": 16
+      },
+      "kind": "button",
+      "variantHint": "default",
+      "sizeHint": "xs",
+      "retina": true
+    },
+    {
+      "cluster": "button--default--xl",
+      "variant": 0,
+      "path": "screenshots/button-default-xl-0.png",
+      "bounds": {
+        "w": 430,
+        "h": 48
+      },
+      "kind": "button",
+      "variantHint": "default",
+      "sizeHint": "xl",
+      "retina": true
+    }
+  ],
+  "fullPage": {
+    "path": "screenshots/full-page.png",
+    "retina": true
+  },
+  "count": 3
+}
