@@ -1,5 +1,3 @@
-[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/ryjoxtechnologies-octopoda-os-badge.png)](https://mseep.ai/app/ryjoxtechnologies-octopoda-os)
-
 <h1 align="center">🐙 Octopoda</h1>
 
 <p align="center">
@@ -11,25 +9,17 @@
   <a href="https://pypi.org/project/octopoda/"><img src="https://img.shields.io/pypi/v/octopoda?style=flat-square&label=pypi" alt="PyPI" /></a>
   <a href="https://pypi.org/project/octopoda/"><img src="https://img.shields.io/pypi/dm/octopoda?style=flat-square&color=blue&label=downloads" alt="Downloads" /></a>
   <a href="https://github.com/RyjoxTechnologies/Octopoda-OS/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/RyjoxTechnologies/Octopoda-OS/ci.yml?branch=main&style=flat-square&label=CI" alt="CI" /></a>
-  <a href="https://github.com/RyjoxTechnologies/Octopoda-OS/actions/workflows/smoke.yml"><img src="https://img.shields.io/github/actions/workflow/status/RyjoxTechnologies/Octopoda-OS/smoke.yml?branch=main&style=flat-square&label=smoke" alt="Smoke" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" /></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.9+-blue?style=flat-square" alt="Python 3.9+" /></a>
   <a href="https://github.com/RyjoxTechnologies/Octopoda-OS/stargazers"><img src="https://img.shields.io/github/stars/RyjoxTechnologies/Octopoda-OS?style=flat-square&color=gold" alt="Stars" /></a>
 </p>
 
 <p align="center">
-  <a href="https://octopodas.com"><b>Website</b></a> ·
-  <a href="https://octopodas.com/docs"><b>Docs</b></a> ·
-  <a href="https://octopodas.com/dashboard"><b>Dashboard</b></a> ·
   <a href="#quick-start"><b>Quick start</b></a> ·
-  <a href="#mcp-server"><b>MCP</b></a>
+  <a href="#dashboard"><b>Dashboard</b></a> ·
+  <a href="#mcp-server"><b>MCP</b></a> ·
+  <a href="#how-it-compares"><b>Comparisons</b></a>
 </p>
-
-<p align="center">
-  <img src="docs/images/dashboard-overview.png" alt="Octopoda dashboard — 5 agents, 226 ops, 382 loops caught, $12.45 in wasted tokens detected" width="900" />
-</p>
-
-<p align="center"><sub><i>Live overview from a real fleet. Agent health, operations volume, anomaly stream, and dollars saved by catching loops before they ran the bill.</i></sub></p>
 
 ---
 
@@ -39,9 +29,7 @@ Octopoda is the missing layer between your AI agents and a working production sy
 
 You write your agent however you like. Pure Python, LangChain, CrewAI, AutoGen, OpenAI Agents SDK, MCP. Octopoda sits underneath and quietly handles the boring stuff that makes agents actually usable. Persistent memory that survives every restart. Loop detection that catches a stuck agent in seconds, before it burns through your token budget overnight. A full audit trail of every decision, every memory write, every recovery. A live dashboard that finally lets you see what your agents are doing.
 
-It runs locally with one `pip install` and zero infrastructure. When you outgrow that, the same code syncs to the cloud with a single environment variable. No re-architecture, no migration, no lock-in. The whole thing is open source under MIT.
-
-If you have ever shipped an AI agent and watched it forget who you are, loop on a failing API call for hours, or just disappear into a black box you cannot debug, this is the thing you wished existed.
+It runs locally with one `pip install` and zero infrastructure. No cloud account required. No API keys. No Docker. Just local SQLite and a browser dashboard on localhost. The whole thing is open source under MIT.
 
 ---
 
@@ -53,7 +41,7 @@ Three things go wrong when AI agents leave your laptop. Octopoda handles all thr
 
 **Agents loop, and silently burn money.** A stuck agent retrying a failing tool call can quietly burn hundreds of dollars in tokens before anyone notices. Octopoda's five signal loop detector catches retry, oscillation, ping pong, reflection, and recall write patterns in seconds, and surfaces exactly which calls caused it.
 
-**Agents are black boxes, and that is terrifying in production.** Why did it do that? You had no idea, until now. Octopoda logs every decision, every write, every recovery into a hash chained audit trail you can replay, diff, and verify for tamper evidence. Pair it with the live 3D dashboard and you can finally see what your agents are doing in real time.
+**Agents are black boxes, and that is terrifying in production.** Why did it do that? You had no idea, until now. Octopoda logs every decision, every write, every recovery into a hash chained audit trail you can replay, diff, and verify for tamper evidence. Pair it with the live dashboard and you can finally see what your agents are doing in real time.
 
 ---
 
@@ -71,42 +59,36 @@ agent.remember("user_pref", "dark mode")
 agent.recall("user_pref")
 ```
 
-That's it. Your agent now has persistent memory, loop detection, crash recovery, and an audit trail. No config, no setup, no Docker. Memory survives restarts, crashes, and deployments — automatically.
+That's it. Your agent now has persistent memory, loop detection, crash recovery, and an audit trail. No config, no setup, no cloud account. Memory survives restarts, crashes, and deployments — automatically.
 
-### Want the dashboard?
+All tiers are unlimited in local mode. No agent limits, no memory caps, no rate limits.
+
+---
+
+## Dashboard
 
 ```bash
 pip install octopoda[server]
 octopoda
 ```
 
-Open **http://localhost:7842** — the same dashboard as the cloud version, running against your local data. No account, no API key.
+Open **http://localhost:7842** — a full local dashboard running against your SQLite data. No account, no API key, no onboarding.
 
-For the repo's current local-first operational guide, see [`docs/local-run-guide.md`](docs/local-run-guide.md).
+The dashboard includes 11 views:
 
-### Want cloud sync?
-
-Free at [octopodas.com](https://octopodas.com). Set the API key, same code, multi-device sync, team access.
-
-```bash
-export OCTOPODA_API_KEY=sk-octopoda-...
-```
-
----
-
-## Local vs Cloud — same code, your choice
-
-|                        | Local                          | Cloud                          |
-|------------------------|--------------------------------|--------------------------------|
-| Setup                  | `pip install octopoda`         | Sign up at octopodas.com (free)|
-| Storage                | SQLite on your machine         | PostgreSQL + pgvector          |
-| Dashboard              | http://localhost:7842          | octopodas.com/dashboard        |
-| Account                | Not needed                     | Free, then optional paid tiers |
-| Multi-device sync      | No                             | Yes                            |
-| Semantic search        | `octopoda[ai]` extra (33 MB)   | Built-in                       |
-| Upgrade path           | Set `OCTOPODA_API_KEY`         | Already there                  |
-
-Start local. Move to cloud when you need sync, team access, or the managed dashboard. Same Python API both ways.
+| View | What you see |
+|---|---|
+| **Overview** | Agent count, operations, memories, uptime. Growth chart. Recent activity feed. Loop status. |
+| **Atlas** | Interactive force-directed knowledge graph. Drag nodes, zoom, color-coded by connectivity. |
+| **Agents** | All registered agents with performance scores, memory counts, ops, uptime. Expandable detail. |
+| **Memory Explorer** | Browse by prefix, search by content, delete keys. Paginated results. |
+| **Shared Memory** | Named memory spaces with author tracking, changelogs, and write UI. |
+| **Performance** | System metrics, agent comparison table, time series latency charts per agent. |
+| **Analytics** | Anomaly detection, growth trends, cross-agent performance comparison. |
+| **Audit Trail** | Hash-chained event timeline filterable by agent. Decision explanations with context snapshots. |
+| **Recovery** | Crash recovery history with keys restored, recovery time, and aggregate stats. |
+| **Loop Intelligence** | 5-signal loop severity (green/yellow/orange/red), score, signal breakdown, 24h history chart. |
+| **Settings** | LLM extraction config, webhook management, connection testing, system status. |
 
 ---
 
@@ -114,36 +96,23 @@ Start local. Move to cloud when you need sync, team access, or the managed dashb
 
 When you create an `AgentRuntime`, all of this runs in the background, automatically:
 
-| Feature             | What it does                                                              |
-|---------------------|---------------------------------------------------------------------------|
-| Persistent memory   | Survives restarts, crashes, deployments. Versioned by default.            |
-| Loop detection      | 5-signal engine catches retry, oscillation, ping-pong, reflection, recall.|
-| Audit trail         | Every write hashed and chained. Replayable, verifiable.                   |
-| Crash recovery      | Automatic snapshots and heartbeat-based restore.                          |
-| Health scoring      | Continuous performance and memory quality monitoring per agent.           |
-| Drift tracking      | Goal alignment over time, with deviation alerts.                          |
+| Feature | What it does |
+|---|---|
+| Persistent memory | Survives restarts, crashes, deployments. Versioned by default. |
+| Loop detection | 5-signal engine catches retry, oscillation, ping-pong, reflection, recall. |
+| Audit trail | Every write hashed and chained. Replayable, verifiable. |
+| Crash recovery | Automatic snapshots and heartbeat-based restore. |
+| Health scoring | Continuous performance and memory quality monitoring per agent. |
+| Drift tracking | Goal alignment over time, with deviation alerts. |
+| Fact extraction | LLM-powered decomposition of raw text into structured, embeddable facts. |
 
 You don't configure any of it. It just works.
-
----
-
-## See Inside Your Agents
-
-Track latency, error rates, memory usage, and health scores for every agent — with the same dashboard locally and in cloud.
-
-![Agent Performance](docs/images/dashboard-performance.png)
-
-Browse every memory the agent ever wrote, inspect version history, and see exactly how its knowledge changed over time.
-
-![Memory Explorer](docs/images/memory-explorer.png)
 
 ---
 
 ## Audit Trail
 
 Every decision, crash, recovery, and anomaly your agents make is logged with full context — including a memory snapshot captured at the moment of decision. Replay any time window and see exactly what each agent knew, decided, and why.
-
-![Audit Trail](docs/images/audit-trail.png)
 
 ```python
 agent.log_decision(
@@ -162,8 +131,6 @@ Each event is hashed and chained (`prev_hash` → `_this_hash`), so the log is t
 ## Shared Memory
 
 Multiple agents working on the same problem can share knowledge through named memory spaces. Writes are atomic, reads are immediate, and every change is logged with its author — so you always know which agent contributed what.
-
-![Shared Memory](docs/images/shared-memory.png)
 
 ```python
 research_agent.share("market_size", "$2.1B AI memory market by 2027", space="team-knowledge")
@@ -186,7 +153,6 @@ Find memories by meaning, not just exact keys.
 ```python
 agent.remember("bio", "Alice is a vegetarian living in London")
 results = agent.recall_similar("what does the user eat?")
-# Returns the right memory with a similarity score
 ```
 
 ### Agent Messaging
@@ -210,10 +176,10 @@ agent.update_progress(milestone_index=0, note="Backup done")
 ### Memory Management
 
 ```python
-agent.forget("outdated_config")                   # Delete a specific memory
-agent.forget_stale(max_age_seconds=30*86400)      # Clean up memories older than 30 days
-agent.consolidate(dry_run=False)                  # Merge near-duplicates
-agent.memory_health()                             # Get a health report
+agent.forget("outdated_config")
+agent.forget_stale(max_age_seconds=30*86400)
+agent.consolidate(dry_run=False)
+agent.memory_health()
 ```
 
 ### Snapshots and Recovery
@@ -281,8 +247,6 @@ restored = memory.restore_thread("thread_001")
 ```
 </details>
 
-All integrations work locally (no API key) or with cloud sync (set `OCTOPODA_API_KEY`).
-
 ---
 
 ## MCP Server
@@ -296,7 +260,7 @@ pip install octopoda[mcp]
 **Claude Code:**
 
 ```bash
-claude mcp add octopoda -s user -e OCTOPODA_API_KEY=sk-octopoda-YOUR_KEY -- python -m synrix_runtime.api.mcp_server
+claude mcp add octopoda -s user -- python -m synrix_runtime.api.mcp_server
 ```
 
 **Claude Desktop** (`claude_desktop_config.json`):
@@ -306,8 +270,7 @@ claude mcp add octopoda -s user -e OCTOPODA_API_KEY=sk-octopoda-YOUR_KEY -- pyth
   "mcpServers": {
     "octopoda": {
       "command": "python",
-      "args": ["-m", "synrix_runtime.api.mcp_server"],
-      "env": { "OCTOPODA_API_KEY": "sk-octopoda-YOUR_KEY" }
+      "args": ["-m", "synrix_runtime.api.mcp_server"]
     }
   }
 }
@@ -357,46 +320,22 @@ If you register the server with a different name (e.g. `claude mcp add memory ..
 
 ---
 
-## Cloud
-
-Sign up free at [octopodas.com](https://octopodas.com) for the dashboard, managed hosting, and cloud API.
-
-```python
-from octopoda import Octopoda
-
-client = Octopoda()              # Uses OCTOPODA_API_KEY env var
-agent = client.agent("my_agent")
-agent.write("preference", "dark mode")
-results = agent.search("user preferences")
-```
-
-|                       | Free      | Pro ($19/mo)  | Business ($49/mo) | Scale ($99/mo)   |
-|-----------------------|-----------|---------------|-------------------|------------------|
-| Agents                | 5         | 25            | 75                | Unlimited        |
-| Memories              | 5,000     | 250,000       | 1,000,000         | 5,000,000        |
-| AI extractions        | 100       | 10,000        | 50,000            | Unlimited        |
-| Rate limit            | 60 rpm    | 300 rpm       | 1,000 rpm         | 5,000 rpm        |
-| Loop detection        | Basic     | Full v2       | Full v2           | Full v2          |
-| Shared spaces         | 1         | 5             | Unlimited         | Unlimited        |
-| Dashboard             | Yes       | Yes           | Yes               | Yes              |
-| Support               | Community | Email (48h)   | Priority          | Dedicated        |
-
----
-
 ## How It Compares
 
-|                       | Octopoda           | Mem0             | Zep              | LangChain Memory |
-|-----------------------|--------------------|------------------|------------------|------------------|
-| Open source           | MIT                | Apache 2.0       | Partial (CE)     | MIT              |
-| Local-first           | Yes (SQLite)       | Cloud-first      | Cloud-first      | In-process       |
-| Loop detection        | 5-signal engine    | No               | No               | No               |
-| Agent messaging       | Built-in           | No               | No               | No               |
-| Audit trail           | Hash-chained       | No               | No               | No               |
-| Crash recovery        | Snapshots + restore| N/A              | No               | No               |
-| Shared memory         | Built-in           | No               | No               | No               |
-| MCP server            | 28 tools           | No               | No               | No               |
-| Semantic search       | Local embeddings   | Cloud embeddings | Cloud embeddings | Needs vector DB  |
-| Framework integrations| LangChain, CrewAI, AutoGen, OpenAI Agents SDK | LangChain | LangChain | Own only |
+| | Octopoda | Mem0 | Zep | LangChain Memory |
+|---|---|---|---|---|
+| Open source | MIT | Apache 2.0 | Partial (CE) | MIT |
+| Local-first | Yes (SQLite) | Cloud-first | Cloud-first | In-process |
+| Loop detection | 5-signal engine | No | No | No |
+| Agent messaging | Built-in | No | No | No |
+| Audit trail | Hash-chained | No | No | No |
+| Crash recovery | Snapshots + restore | N/A | No | No |
+| Shared memory | Built-in | No | No | No |
+| MCP server | 28 tools | No | No | No |
+| Semantic search | Local embeddings | Cloud embeddings | Cloud embeddings | Needs vector DB |
+| Fact extraction | Built-in (LLM-powered) | No | No | No |
+| Framework integrations | LangChain, CrewAI, AutoGen, OpenAI Agents SDK | LangChain | LangChain | Own only |
+| Dashboard | Local, zero config | Cloud only | Cloud only | None |
 
 ---
 
@@ -415,14 +354,12 @@ pip install octopoda[all]         # Everything (Python 3.10+)
 
 ## Configuration
 
-| Variable                   | Default                  | Description                                  |
-|----------------------------|--------------------------|----------------------------------------------|
-| `OCTOPODA_API_KEY`         |                          | Cloud API key (free at octopodas.com)        |
-| `OCTOPODA_LICENSE_KEY`     |                          | License key for higher tiers (optional)      |
-| `OCTOPODA_LLM_PROVIDER`    | `none`                   | `openai`, `anthropic`, `ollama`              |
-| `OCTOPODA_OPENAI_API_KEY`  |                          | Your OpenAI key for local fact extraction    |
-| `OCTOPODA_EMBEDDING_MODEL` | `BAAI/bge-small-en-v1.5` | Local embedding model (33 MB, runs on CPU)   |
-| `SYNRIX_DATA_DIR`          | `~/.synrix/data`         | Local data directory                         |
+| Variable | Default | Description |
+|---|---|---|
+| `OCTOPODA_LLM_PROVIDER` | `none` | `openai`, `anthropic`, `ollama` |
+| `OCTOPODA_OPENAI_API_KEY` | | Your OpenAI key for local fact extraction |
+| `OCTOPODA_EMBEDDING_MODEL` | `BAAI/bge-small-en-v1.5` | Local embedding model (33 MB, runs on CPU) |
+| `SYNRIX_DATA_DIR` | `~/.synrix/data` | Local data directory |
 
 ## Contributing
 
@@ -441,6 +378,6 @@ MIT — use it however you want. See [LICENSE](LICENSE).
 <p align="center">
   Built by <a href="https://octopodas.com">RYJOX Technologies</a> ·
   <a href="https://pypi.org/project/octopoda/">PyPI</a> ·
-  <a href="https://api.octopodas.com/docs">Cloud API</a> ·
-  <a href="https://octopodas.com/dashboard">Dashboard</a>
+  <a href="#mcp-server">MCP Server</a> ·
+  <a href="#dashboard">Local Dashboard</a>
 </p>
