@@ -1,4 +1,4 @@
-<h1 align="center">🐙 Octopoda</h1>
+<h1 align="center">🐙 Octopoda <sup><sub>Forked</sub></sup></h1>
 
 <p align="center">
   <strong>The open-source memory operating system for AI agents.</strong><br />
@@ -6,12 +6,10 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/RyjoxTechnologies/Octopoda-OS"><img src="https://img.shields.io/badge/upstream-Octopoda--OS-blue?style=flat-square" alt="Upstream" /></a>
   <a href="https://pypi.org/project/octopoda/"><img src="https://img.shields.io/pypi/v/octopoda?style=flat-square&label=pypi" alt="PyPI" /></a>
-  <a href="https://pypi.org/project/octopoda/"><img src="https://img.shields.io/pypi/dm/octopoda?style=flat-square&color=blue&label=downloads" alt="Downloads" /></a>
-  <a href="https://github.com/RyjoxTechnologies/Octopoda-OS/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/RyjoxTechnologies/Octopoda-OS/ci.yml?branch=main&style=flat-square&label=CI" alt="CI" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" /></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.9+-blue?style=flat-square" alt="Python 3.9+" /></a>
-  <a href="https://github.com/RyjoxTechnologies/Octopoda-OS/stargazers"><img src="https://img.shields.io/github/stars/RyjoxTechnologies/Octopoda-OS?style=flat-square&color=gold" alt="Stars" /></a>
 </p>
 
 <p align="center">
@@ -20,6 +18,21 @@
   <a href="#mcp-server"><b>MCP</b></a> ·
   <a href="#how-it-compares"><b>Comparisons</b></a>
 </p>
+
+---
+
+## What is this fork
+
+This is a local-first fork of [Octopoda-OS](https://github.com/RyjoxTechnologies/Octopoda-OS) by RYJOX Technologies. The upstream project supports both local and cloud modes. This fork strips out the cloud dependencies and focuses entirely on self-hosted, zero-account, local-only operation.
+
+**Changes from upstream:**
+
+- **Removed all cloud dependencies** — no API keys, no cloud sync, no account requirements. Runs entirely on local SQLite.
+- **Unlimited local tiers** — no agent limits, no memory caps, no rate limits. All tiers set to unlimited for local use.
+- **Rebuilt the dashboard from scratch** — replaced the cloud React SPA (which required onboarding and cloud auth) with a clean, self-contained HTML dashboard. 11 views: Overview with real charts, interactive Atlas knowledge graph, Agents, Memory Explorer, Shared Memory, Performance, Analytics, Audit Trail, Recovery, Loop Intelligence, and Settings. No frameworks, no build tools.
+- **Implemented hash-chained audit trail** — the upstream README claimed `verify_chain()` and tamper-evident hash chaining but it was not implemented. This fork adds SHA-256 hash chaining to all audit events (decisions, handoffs, anomalies, crashes, recoveries) with a working `verify_chain()` method.
+- **LLM fact extraction** — integrated fact decomposition into the write pipeline. When a memory is stored, an LLM extracts structured facts and embeds them for semantic search.
+- **Removed cloud marketing** — deleted blog images, marketing assets, RSS feed, sitemap, Google Analytics, TAAFT verification, and the legacy dashboard directory.
 
 ---
 
