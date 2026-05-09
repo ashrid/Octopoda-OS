@@ -12,6 +12,7 @@ Usage:
 import logging
 import time
 import json
+import hashlib
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List, Optional
@@ -2074,8 +2075,11 @@ class AgentRuntime:
             "loop_warning": decision_loop,
         }
 
-        # Write audit record in background — never block the response.
-        # Submit to enrichment pool so it doesn't compete with API executor.
+        prev_hash = self._get_audit_prev_hash(self.agent_id)
+        decision_data["prev_hash"] = prev_hash
+        canonical = json.dumps(decision_data, sort_keys=True, default=str, separators=(',', ':'))
+        decision_data["_this_hash"] = hashlib.sha256(canonical.encode()).hexdigest()
+
         def _write_audit():
             try:
                 raw_client = self.backend.client if hasattr(self.backend, 'client') else self.backend
@@ -2090,6 +2094,29 @@ class AgentRuntime:
 
         _enrichment_pool.submit(_write_audit)
         return decision_data
+
+    def _get_audit_prev_hash(self, agent_id: str) -> str:
+        genesis = "0000000000000000000000000000000000000000000000000000000000000000"
+        try:
+            events = self.backend.query_prefix(f"audit:{agent_id}:", limit=1)
+            if not events:
+                return genesis
+            data = events[0].get("data", {})
+            val = data.get("value", data) if isinstance(data, dict) else {}
+            if isinstance(val, str):
+                try:
+                    val = json.loads(val)
+                except (json.JSONDecodeError, TypeError):
+                    val = {}
+            return val.get("_this_hash", genesis)
+        except Exception:
+            return genesis
+
+    def verify_chain(self) -> dict:
+        """Verify the integrity of the audit hash chain for this agent."""
+        from synrix_runtime.monitoring.audit import AuditSystem
+        audit = AuditSystem(self.backend)
+        return audit.verify_chain(self.agent_id)
 
     def get_stats(self) -> AgentStats:
         """Get complete performance statistics."""

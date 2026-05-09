@@ -5,6 +5,7 @@ Complete decision audit trail with full memory snapshots.
 
 import time
 import json
+import hashlib
 from typing import Dict, List, Optional
 
 
@@ -18,6 +19,29 @@ class AuditSystem:
             from synrix_runtime.config import SynrixConfig
             config = SynrixConfig.from_env()
             self.backend = get_synrix_backend(**config.get_backend_kwargs())
+
+    def _compute_hash(self, entry: dict) -> str:
+        canonical = json.dumps(entry, sort_keys=True, default=str, separators=(',', ':'))
+        return hashlib.sha256(canonical.encode()).hexdigest()
+
+    def _get_prev_hash(self, agent_id: str) -> str:
+        events = self.backend.query_prefix(f"audit:{agent_id}:", limit=1)
+        if not events:
+            return "0000000000000000000000000000000000000000000000000000000000000000"
+        data = events[0].get("data", {})
+        val = data.get("value", data) if isinstance(data, dict) else {}
+        if isinstance(val, str):
+            try:
+                val = json.loads(val)
+            except (json.JSONDecodeError, TypeError):
+                val = {}
+        return val.get("_this_hash", "0000000000000000000000000000000000000000000000000000000000000000")
+
+    def _chain_entry(self, agent_id: str, entry: dict) -> dict:
+        prev_hash = self._get_prev_hash(agent_id)
+        entry["prev_hash"] = prev_hash
+        entry["_this_hash"] = self._compute_hash(entry)
+        return entry
 
     def log_decision(self, agent_id: str, decision: str, reasoning: str, memory_snapshot: dict = None):
         """Log an agent decision with full memory context."""
@@ -33,6 +57,7 @@ class AuditSystem:
             "memory_snapshot": memory_snapshot,
             "timestamp": time.time(),
         }
+        entry = self._chain_entry(agent_id, entry)
         self.backend.write(
             f"audit:{agent_id}:{ts}:decision",
             entry,
@@ -51,6 +76,7 @@ class AuditSystem:
             "shared_context": shared_context or {},
             "timestamp": time.time(),
         }
+        entry = self._chain_entry(f"handoff:{task_id}", entry)
         self.backend.write(
             f"audit:handoffs:{task_id}:{ts}",
             entry,
@@ -67,6 +93,7 @@ class AuditSystem:
             "details": details,
             "timestamp": time.time(),
         }
+        entry = self._chain_entry(agent_id, entry)
         self.backend.write(
             f"audit:{agent_id}:{ts}:anomaly",
             entry,
@@ -84,6 +111,7 @@ class AuditSystem:
             "memory_snapshot": self._capture_snapshot(agent_id),
             "timestamp": time.time(),
         }
+        entry = self._chain_entry(agent_id, entry)
         self.backend.write(
             f"audit:{agent_id}:{ts}:crash",
             entry,
@@ -99,11 +127,47 @@ class AuditSystem:
             "recovery_result": recovery_result,
             "timestamp": time.time(),
         }
+        entry = self._chain_entry(agent_id, entry)
         self.backend.write(
             f"audit:{agent_id}:{ts}:recovery",
             entry,
             metadata={"type": "audit_recovery", "agent_id": agent_id}
         )
+
+    def verify_chain(self, agent_id: str) -> dict:
+        """Verify the integrity of the audit hash chain for an agent."""
+        events = self.replay(agent_id)
+
+        if not events:
+            return {"valid": True, "events_checked": 0, "agent_id": agent_id, "message": "No audit events found"}
+
+        broken = []
+        prev_hash = "0000000000000000000000000000000000000000000000000000000000000000"
+
+        for event in events:
+            stored_hash = event.get("_this_hash")
+            stored_prev = event.get("prev_hash")
+
+            if stored_hash is None:
+                broken.append({"event": event.get("_key", "?"), "issue": "missing _this_hash"})
+                continue
+
+            recomputed = self._compute_hash({k: v for k, v in event.items() if k != "_this_hash"})
+
+            if recomputed != stored_hash:
+                broken.append({"event": event.get("_key", "?"), "issue": "hash_mismatch", "expected": recomputed, "found": stored_hash})
+
+            if stored_prev != prev_hash:
+                broken.append({"event": event.get("_key", "?"), "issue": "chain_broken", "expected_prev": prev_hash, "found_prev": stored_prev})
+
+            prev_hash = stored_hash
+
+        return {
+            "valid": len(broken) == 0,
+            "events_checked": len(events),
+            "agent_id": agent_id,
+            "broken_links": broken,
+        }
 
     def replay(self, agent_id: str, from_ts: float = None, to_ts: float = None) -> list:
         """Replay all audit events for an agent in chronological order."""
