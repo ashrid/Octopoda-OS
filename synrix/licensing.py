@@ -37,9 +37,9 @@ from .exceptions import SynrixError
 # ---------------------------------------------------------------------------
 
 TIER_LIMITS = {
-    "free":      {"max_agents": 3,  "max_memories_per_agent": 10_000},
-    "starter":   {"max_agents": 10, "max_memories_per_agent": 0},
-    "pro":       {"max_agents": 25, "max_memories_per_agent": 0},
+    "free":      {"max_agents": 0,  "max_memories_per_agent": 0},
+    "starter":   {"max_agents": 0,  "max_memories_per_agent": 0},
+    "pro":       {"max_agents": 0,  "max_memories_per_agent": 0},
     "unlimited": {"max_agents": 0,  "max_memories_per_agent": 0},
 }
 

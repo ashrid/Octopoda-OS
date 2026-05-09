@@ -247,6 +247,31 @@ class SynrixAgentBackend:
             if embedding is not None:
                 kwargs["embedding"] = embedding
             node_id = self.client.add_node(**kwargs)
+            
+            # LLM Fact Extraction — decompose raw text into structured facts
+            if node_id is not None:
+                try:
+                    from synrix.fact_extractor import FactExtractor
+                    from synrix.embeddings import EmbeddingModel
+                    extractor = FactExtractor.get()
+                    embed_model = EmbeddingModel.get()
+                    if extractor and extractor._available and embed_model:
+                        text_val = str(value) if not isinstance(value, str) else value
+                        result = extractor.extract_facts(text_val)
+                        if result.used_llm and result.facts:
+                            fact_embeddings = []
+                            for fact_text in result.facts:
+                                try:
+                                    emb = embed_model.encode(fact_text)
+                                    fact_embeddings.append({"text": fact_text, "embedding": emb})
+                                except Exception:
+                                    pass
+                            if fact_embeddings:
+                                self.store_fact_embeddings(node_id, key, fact_embeddings)
+                                logger.debug("Extracted %d facts from %s", len(fact_embeddings), key)
+                except Exception as ex:
+                    logger.debug("Fact extraction skipped for %s: %s", key, ex)
+            
             return node_id
         except Exception as e:
             logger.warning(f"Failed to write to SYNRIX ({self.backend_type}): {e}")

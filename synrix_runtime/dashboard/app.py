@@ -13,8 +13,7 @@ def create_app():
     """Create and configure the Flask dashboard application."""
     static_dir = Path(__file__).parent / "static"
     app = Flask(__name__, static_folder=str(static_dir))
-    CORS(app, origins=["http://localhost:7842", "http://127.0.0.1:7842",
-                        "http://localhost:8000", "http://127.0.0.1:8000"])
+    CORS(app, supports_credentials=True)  # Allow all origins in local dev mode
 
     from synrix_runtime.dashboard.api_routes import api
     app.register_blueprint(api)
@@ -44,7 +43,6 @@ def create_app():
         file_path = static_dir / path
         if path and file_path.is_file():
             return send_from_directory(str(static_dir), path)
-        # Otherwise serve index.html (React Router handles the route)
         return send_from_directory(str(static_dir), "index.html")
 
     return app

@@ -107,7 +107,7 @@ def health_status():
 @api.route("/api/authentication")
 def authentication_status():
     return jsonify({
-        "authenticated": False,
+        "authenticated": True,
         "local_mode": True,
         "mode": "local",
         "account_required": False,
@@ -121,6 +121,26 @@ def pricing_status():
         "status": "active",
         "limits": {"agents": "unlimited", "memories": "unlimited"},
         "billing": "disabled_in_local_mode",
+    })
+
+
+@api.route("/api/usage")
+def usage_status():
+    return jsonify({
+        "agent_count": 0,
+        "memory_count": 0,
+        "storage_bytes": 0,
+        "operations_last_24h": 0,
+        "local_mode": True,
+    })
+
+
+@api.route("/api/brain/cost-summary")
+def brain_cost_summary():
+    return jsonify({
+        "total_cost": 0,
+        "local_mode": True,
+        "message": "Cost tracking disabled in local mode",
     })
 
 
