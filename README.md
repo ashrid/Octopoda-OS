@@ -373,6 +373,8 @@ See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
 
 MIT — use it however you want. See [LICENSE](LICENSE).
 
+This fork modifies only the Python SDK source code, which is covered by the MIT license granted by RYJOX Technologies. The upstream LICENSE file's proprietary section applies to native engine binaries and compiled executables distributed separately — it does not apply to the Python source code in this repository. All modifications (local-only dashboard, removed cloud dependencies, unlimited local tiers) are permitted under the MIT terms, which explicitly grant rights to use, copy, modify, merge, publish, and distribute the software.
+
 ---
 
 <p align="center">
