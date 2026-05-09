@@ -82,6 +82,8 @@ octopoda
 
 Open **http://localhost:7842** — the same dashboard as the cloud version, running against your local data. No account, no API key.
 
+For the repo's current local-first operational guide, see [`docs/local-run-guide.md`](docs/local-run-guide.md).
+
 ### Want cloud sync?
 
 Free at [octopodas.com](https://octopodas.com). Set the API key, same code, multi-device sync, team access.

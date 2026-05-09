@@ -14,7 +14,7 @@ import time
 import json
 import threading
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
 
 logger = logging.getLogger("synrix.runtime")
@@ -173,7 +173,7 @@ class AgentRuntime:
 
     def __init__(self, agent_id: str, agent_type: str = "generic", metadata: dict = None,
                  backend_override=None, tenant_id: str = None, api_key: str = None,
-                 require_account: bool = True):
+                 require_account: bool = False):
         self.agent_id = agent_id
         self.agent_type = agent_type
         self.metadata = metadata or {}
@@ -183,6 +183,7 @@ class AgentRuntime:
         self._query_count = 0
         self._started_at = time.time()
         self._api_key = api_key
+        self._heartbeat_stop_event = threading.Event()
 
         # Account check — ensure user is authenticated
         # Skip if: backend is pre-injected (cloud server), or explicitly disabled
@@ -433,6 +434,14 @@ class AgentRuntime:
             success=node_id is not None,
             loop_warning=loop_warning,
         )
+
+    def remember_many(self, items: Dict[str, Any]) -> int:
+        """Store multiple memories in sequence and return the count written."""
+        count = 0
+        for key, value in items.items():
+            self.remember(key, value)
+            count += 1
+        return count
 
     def flush(self, timeout: float = 120.0) -> dict:
         """Wait for ALL pending background enrichment to complete.
@@ -902,6 +911,122 @@ class AgentRuntime:
         conflict_check = self.detect_conflicts(key, value, threshold=conflict_threshold)
         result = self.remember(key, value, tags=tags)
         return SafeWriteResult(write=result, conflicts=conflict_check)
+
+    def process_conversation(self, messages: list[dict[str, str]],
+                              extract_preferences: bool = True,
+                              extract_facts: bool = True,
+                              extract_decisions: bool = True,
+                              namespace: str = "conversations") -> dict:
+        """Process a conversation and store local memories for later retrieval."""
+        start = time.time()
+        ts = int(start)
+
+        conv_lines = []
+        for msg in messages:
+            role = msg.get("role", "unknown")
+            content = msg.get("content", "")
+            conv_lines.append(f"{role}: {content}")
+        conversation_text = "\n".join(conv_lines)
+
+        stored_memories = []
+        conv_key = f"{namespace}:turn_{ts}"
+        conv_result = self.remember(conv_key, conversation_text, tags=["conversation"])
+        stored_memories.append({"key": conv_key, "type": "conversation", "node_id": conv_result.node_id})
+
+        user_messages = [m.get("content", "") for m in messages if m.get("role") == "user" and m.get("content")]
+        assistant_messages = [m.get("content", "") for m in messages if m.get("role") == "assistant" and m.get("content")]
+
+        if extract_preferences and user_messages:
+            pref_text = " ".join(user_messages).strip()
+            if pref_text:
+                pref_key = f"{namespace}:preference:{ts}"
+                pref_result = self.remember(pref_key, pref_text, tags=["preference", "user"])
+                stored_memories.append({"key": pref_key, "type": "preferences", "node_id": pref_result.node_id})
+
+        if extract_facts and user_messages:
+            fact_text = " ".join(user_messages).strip()
+            if fact_text:
+                fact_key = f"{namespace}:fact:{ts}"
+                fact_result = self.remember(fact_key, fact_text, tags=["fact", "user"])
+                stored_memories.append({"key": fact_key, "type": "facts", "node_id": fact_result.node_id})
+
+        if extract_decisions and assistant_messages:
+            decision_text = " ".join(assistant_messages).strip()
+            if decision_text:
+                decision_key = f"{namespace}:decision:{ts}"
+                decision_result = self.remember(decision_key, decision_text, tags=["decision", "action"])
+                stored_memories.append({"key": decision_key, "type": "decisions", "node_id": decision_result.node_id})
+
+        return {
+            "agent_id": self.agent_id,
+            "memories_stored": len(stored_memories),
+            "memories": stored_memories,
+            "message_count": len(messages),
+            "latency_ms": round((time.time() - start) * 1000, 1),
+        }
+
+    def get_context(self, query: str, limit: int = 10, format: str = "text") -> dict:
+        """Get relevant local context for a query."""
+        start = time.time()
+        matches: list[dict[str, Any]] = []
+
+        try:
+            result = self.recall_similar(query, limit=limit)
+            items = result.items if hasattr(result, "items") else []
+            for item in items:
+                if isinstance(item, dict):
+                    matches.append(item)
+        except Exception:
+            matches = []
+
+        if not matches:
+            prefix = f"agents:{self.agent_id}:"
+            query_terms = [term.lower() for term in query.split() if term.strip()]
+            for item in self.backend.query_prefix(prefix, limit=1000):
+                data = item.get("data", {})
+                value = data.get("value", data)
+                text = self._value_to_text(value)
+                if not text:
+                    continue
+                lowered = text.lower()
+                if query_terms and not any(term in lowered for term in query_terms):
+                    continue
+                matches.append({
+                    "key": item.get("key", "").replace(prefix, "", 1),
+                    "value": value,
+                    "score": 1.0,
+                })
+                if len(matches) >= limit:
+                    break
+
+        now = time.time()
+        if format == "raw":
+            return {
+                "agent_id": self.agent_id,
+                "query": query,
+                "memories": matches[:limit],
+                "memory_count": min(len(matches), limit),
+                "latency_ms": round((time.time() - start) * 1000, 1),
+            }
+
+        context_parts = []
+        for item in matches[:limit]:
+            value = item.get("value", "")
+            score = item.get("score", 0)
+            if isinstance(value, dict) and "__expires_at" in value and value["__expires_at"] < now:
+                continue
+            if isinstance(value, dict):
+                value = value.get("value", str(value))
+            if score >= 0.5:
+                context_parts.append(str(value))
+
+        return {
+            "agent_id": self.agent_id,
+            "query": query,
+            "context": "\n---\n".join(context_parts) if context_parts else "",
+            "memory_count": len(context_parts),
+            "latency_ms": round((time.time() - start) * 1000, 1),
+        }
 
     # -----------------------------------------------------------------
     # Automatic Loop Detection
@@ -2009,7 +2134,7 @@ class AgentRuntime:
                 )
             except Exception:
                 pass
-            time.sleep(5)
+            self._heartbeat_stop_event.wait(5)
 
     # -----------------------------------------------------------------
     # Memory Forgetting / Compression (addresses scale degradation)
@@ -2900,6 +3025,9 @@ class AgentRuntime:
     def shutdown(self):
         """Gracefully shut down the agent."""
         self._heartbeat_running = False
+        self._heartbeat_stop_event.set()
+        if self._heartbeat_thread.is_alive() and threading.current_thread() is not self._heartbeat_thread:
+            self._heartbeat_thread.join(timeout=1.0)
 
         # Final snapshot
         try:

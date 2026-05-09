@@ -1,26 +1,228 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5GSQZM3BLV"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-5GSQZM3BLV');
-    </script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="alternate" type="application/rss+xml" title="Octopoda Blog" href="/rss.xml" />
-    <title>Octopoda — Persistent Memory for AI Agents</title>
-    <meta name="description" content="Give your AI agents persistent memory, loop detection, and crash recovery. Open source, runs locally or cloud. pip install octopoda." />
-    <meta name="prerender-status-code" content="200" />
-    <script type="module" crossorigin src="/assets/index-eX1k-Pwe.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DoT1ET_M.css">
-  </head>
-  <body style="background-color: hsl(240, 20%, 10%)"> 
-    <script>window.prerenderReady = false;</script>
-    <div id="root"></div>
-    <a href="https://theresanaiforthat.com/ai/octopoda/?ref=featured&v=9761168" target="_blank" rel="nofollow"><img width="300" src="https://media.theresanaiforthat.com/featured-on-taaft.png?width=600" alt="Octopoda featured on There's an AI for That"></a>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Octopoda — Local Dashboard</title>
+<style>
+  :root { --bg: #1a1a2e; --card: #16213e; --accent: #e94560; --text: #eaeaea; --muted: #888; --green: #4ecca3; --border: #2a2a4a; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height:100vh; }
+  .header { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+  .header h1 { font-size: 1.3rem; }
+  .header .dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--green); margin-right:8px; }
+  .header .dot.off { background: var(--accent); }
+  .container { max-width: 1200px; margin:0 auto; padding: 1.5rem 2rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; }
+  .stat-card .label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem; }
+  .stat-card .value { font-size: 1.8rem; font-weight: 700; }
+  .section-title { font-size: 1.1rem; font-weight: 600; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .agents { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+  .agent-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+  .agent-card .id { font-weight: 600; margin-bottom: 0.5rem; }
+  .agent-card .meta { font-size: 0.8rem; color: var(--muted); }
+  .agent-card .score { display:inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-top: 0.5rem; }
+  .agent-card .score.high { background: rgba(78,204,163,0.2); color: var(--green); }
+  .agent-card .score.mid { background: rgba(233,196,106,0.2); color: #e9c46a; }
+  .agent-card .score.low { background: rgba(233,69,96,0.2); color: var(--accent); }
+  .quick-section { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+  .quick-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; flex:1; min-width: 280px; }
+  .quick-card h3 { margin-bottom: 0.8rem; font-size: 0.95rem; }
+  .quick-card input, .quick-card textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 5px; font-family: inherit; font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .quick-card textarea { height: 60px; resize: vertical; }
+  .quick-card button { background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+  .quick-card button:hover { opacity: 0.9; }
+  .quick-card .result { margin-top: 0.5rem; font-size: 0.85rem; padding: 8px; background: var(--bg); border-radius:5px; min-height: 1.5rem; word-break: break-all; }
+  .error { color: var(--accent); }
+  .success { color: var(--green); }
+  .loading { opacity: 0.5; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top:1px solid var(--border); font-size:0.75rem; color:var(--muted); text-align:center; }
+  .endpoints { display:flex; flex-wrap:wrap; gap:0.3rem 1rem; margin-top:0.5rem; }
+  .endpoints a { color: var(--muted); font-size:0.7rem; text-decoration:none; }
+  .endpoints a:hover { color: var(--text); }
+  .refresh-hint { font-size:0.7rem; color:var(--muted); text-align:right; margin-top:0.3rem; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1><span class="dot" id="status-dot"></span>&#x1F419; Octopoda — Local Dashboard</h1>
+  <span style="font-size:0.8rem;color:var(--muted)" id="version"></span>
+</div>
+<div class="container">
+  <!-- stat cards -->
+  <div class="stats" id="stat-cards">
+    <div class="stat-card loading"><div class="label">Backend</div><div class="value">...</div></div>
+    <div class="stat-card loading"><div class="label">DB Size</div><div class="value">...</div></div>
+    <div class="stat-card loading"><div class="label">Nodes</div><div class="value">...</div></div>
+    <div class="stat-card loading"><div class="label">Active Agents</div><div class="value">...</div></div>
+  </div>
+
+  <!-- agent list -->
+  <div class="section-title">Agents</div>
+  <div class="agents" id="agent-list"><div class="loading">Loading agents...</div></div>
+
+  <!-- quick actions -->
+  <div class="section-title">Quick Actions</div>
+  <div class="quick-section">
+    <div class="quick-card">
+      <h3>Remember</h3>
+      <input type="text" id="rem-agent" placeholder="Agent ID (e.g. my_agent)" />
+      <input type="text" id="rem-key" placeholder="Key (e.g. user_pref)" />
+      <input type="text" id="rem-value" placeholder="Value (e.g. dark mode)" />
+      <button onclick="actionRemember()">Store Memory</button>
+      <div class="result" id="rem-result"></div>
+    </div>
+    <div class="quick-card">
+      <h3>Recall</h3>
+      <input type="text" id="rec-agent" placeholder="Agent ID" />
+      <input type="text" id="rec-key" placeholder="Key to recall" />
+      <button onclick="actionRecall()">Recall Memory</button>
+      <div class="result" id="rec-result"></div>
+    </div>
+    <div class="quick-card">
+      <h3>Search</h3>
+      <input type="text" id="srch-agent" placeholder="Agent ID" />
+      <input type="text" id="srch-query" placeholder="Search query" />
+      <button onclick="actionSearch()">Search</button>
+      <div class="result" id="srch-result"></div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="footer">
+    <strong>Local-only mode — no cloud, no login required.</strong>
+    <div class="endpoints">
+      <a href="/api/health" target="_blank">/api/health</a>
+      <a href="/api/agents" target="_blank">/api/agents</a>
+      <a href="/api/overview" target="_blank">/api/overview</a>
+      <a href="/api/settings" target="_blank">/api/settings</a>
+      <a href="/api/loop" target="_blank">/api/loop</a>
+      <a href="/api/live" target="_blank">/api/live</a>
+      <a href="/api/search?q=test" target="_blank">/api/search</a>
+      <a href="/api/webhooks" target="_blank">/api/webhooks</a>
+      <a href="http://localhost:8741/docs" target="_blank">API Docs (Swagger)</a>
+    </div>
+    <div style="margin-top:0.5rem">Storage: ~/.synrix/data/synrix.db &nbsp;|&nbsp; Dashboard: port 7842 &nbsp;|&nbsp; API: port 8741</div>
+  </div>
+  <div class="refresh-hint">Auto-refreshes every 5s</div>
+</div>
+
+<script>
+async function fetchJSON(url) {
+  try { const r = await fetch(url); return r.ok ? await r.json() : null; }
+  catch(e) { return null; }
+}
+
+function scoreClass(s) {
+  if (s >= 70) return 'high';
+  if (s >= 40) return 'mid';
+  return 'low';
+}
+
+async function refreshHealth() {
+  const h = await fetchJSON('/api/health');
+  const dot = document.getElementById('status-dot');
+  if (h && h.status === 'ok') {
+    dot.className = 'dot';
+    document.getElementById('version').textContent = 'v' + (h.backend||'') + ' | up ' + Math.round(h.uptime_seconds||0) + 's';
+  } else {
+    dot.className = 'dot off';
+    document.getElementById('version').textContent = 'disconnected';
+  }
+}
+
+async function refreshOverview() {
+  const o = await fetchJSON('/api/overview');
+  const m = await fetchJSON('/api/metrics/system');
+  if (!o) { document.getElementById('stat-cards').innerHTML = '<div class="stat-card error">Cannot reach local API — is the runtime running?</div>'; return; }
+  document.getElementById('stat-cards').innerHTML =
+    '<div class="stat-card"><div class="label">Backend</div><div class="value">SQLite</div></div>' +
+    '<div class="stat-card"><div class="label">DB Size</div><div class="value">' + (o.db_size || '?') + '</div></div>' +
+    '<div class="stat-card"><div class="label">Nodes</div><div class="value">' + (o.nodes || 0) + '</div></div>' +
+    '<div class="stat-card"><div class="label">Active Agents</div><div class="value">' + ((m && m.active_agents) || 0) + '</div></div>';
+}
+
+async function refreshAgents() {
+  const agents = await fetchJSON('/api/agents');
+  const el = document.getElementById('agent-list');
+  if (!agents || !Array.isArray(agents) || agents.length === 0) {
+    el.innerHTML = '<div class="loading">No agents yet — use the Python API or the Quick Actions below to create one.</div>';
+    return;
+  }
+  el.innerHTML = agents.map(a =>
+    '<div class="agent-card">' +
+      '<div class="id">' + (a.agent_id || a.id || '?') + '</div>' +
+      '<div class="meta">' +
+        'Memory: ' + (a.memory_node_count || a.memories || 0) + ' nodes | ' +
+        'Ops: ' + (a.total_operations || 0) + ' | ' +
+        'Uptime: ' + Math.round(a.uptime_seconds || 0) + 's' +
+      '</div>' +
+      '<span class="score ' + scoreClass(a.performance_score || 0) + '">Score: ' + (a.performance_score || 0) + '</span>' +
+    '</div>'
+  ).join('');
+}
+
+async function actionRemember() {
+  const agentId = document.getElementById('rem-agent').value.trim();
+  const key = document.getElementById('rem-key').value.trim();
+  const value = document.getElementById('rem-value').value.trim();
+  const el = document.getElementById('rem-result');
+  if (!agentId || !key || !value) { el.className = 'result error'; el.textContent = 'Fill all fields.'; return; }
+  el.className = 'result'; el.textContent = 'Storing...';
+  try {
+    const resp = await fetch('/api/shared/write', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({space:'global', key: agentId + ':' + key, value: value, author:'dashboard'})
+    });
+    const d = await resp.json();
+    el.className = d.success ? 'result success' : 'result error';
+    el.textContent = d.success ? 'Stored: ' + key : 'Error: ' + JSON.stringify(d);
+    refreshAgents(); refreshOverview();
+  } catch(e) { el.className = 'result error'; el.textContent = 'Request failed: ' + e.message; }
+}
+
+async function actionRecall() {
+  const agentId = document.getElementById('rec-agent').value.trim();
+  const key = document.getElementById('rec-key').value.trim();
+  const el = document.getElementById('rec-result');
+  if (!agentId || !key) { el.className = 'result error'; el.textContent = 'Fill all fields.'; return; }
+  el.className = 'result'; el.textContent = 'Recalling...';
+  try {
+    const d = await fetchJSON('/api/memory/browse?prefix=agents:' + agentId + ':' + key + '&limit=5');
+    const matches = d && d.items ? d.items.filter(i => i.key && i.key.endsWith(key)) : [];
+    el.className = matches.length ? 'result success' : 'result';
+    el.textContent = matches.length ? JSON.stringify(matches[0].value, null, 2).substring(0, 500) : '(not found)';
+  } catch(e) { el.className = 'result error'; el.textContent = 'Request failed: ' + e.message; }
+}
+
+async function actionSearch() {
+  const agentId = document.getElementById('srch-agent').value.trim();
+  const query = document.getElementById('srch-query').value.trim();
+  const el = document.getElementById('srch-result');
+  if (!query) { el.className = 'result error'; el.textContent = 'Enter a search query.'; return; }
+  el.className = 'result'; el.textContent = 'Searching...';
+  try {
+    const d = await fetchJSON('/api/search?q=' + encodeURIComponent(query));
+    const results = d && d.results ? d.results.slice(0, 5) : [];
+    el.className = results.length ? 'result success' : 'result';
+    el.textContent = results.length ? results.map(r => r.key + ': ' + JSON.stringify(r.value).substring(0, 120)).join('\n') : '(no results)';
+  } catch(e) { el.className = 'result error'; el.textContent = 'Request failed: ' + e.message; }
+}
+
+// init
+refreshHealth(); refreshOverview(); refreshAgents();
+setInterval(() => { refreshHealth(); refreshAgents(); }, 5000);
+setInterval(refreshOverview, 30000);
+
+// also poll the old-style agents endpoint for fuller data
+async function refreshDetailedAgents() {
+  const agents = await fetchJSON('/api/agents');
+  if (agents && Array.isArray(agents) && agents.length > 0) {
+    document.getElementById('agent-list').dataset.detailed = 'true';
+  }
+}
+setTimeout(refreshDetailedAgents, 1000);
+</script>
+</body>
 </html>

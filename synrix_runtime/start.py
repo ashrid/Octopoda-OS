@@ -27,10 +27,16 @@ if os.path.isfile(_env_file):
                 if _key and _key not in os.environ:
                     os.environ[_key] = _val
 
+try:
+    from synrix_runtime.extraction_config import load_local_extraction_config
+    load_local_extraction_config()
+except Exception:
+    pass
+
 
 STARTUP_BANNER = """
  +=======================================================+
- |          OCTOPODA AGENT RUNTIME v3.0.3                |
+ |          OCTOPODA AGENT RUNTIME v3.1.8                |
  |          Persistent Memory Kernel for AI Agents       |
  +=======================================================+
  |  Backend:            + {backend:<28s}|

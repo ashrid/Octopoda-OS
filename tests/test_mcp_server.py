@@ -3,7 +3,6 @@ Tests for the Octopoda MCP Server tools.
 Calls tool functions directly (no MCP transport needed).
 """
 
-import os
 import pytest
 
 
@@ -21,6 +20,11 @@ def mcp_env(tmp_dir, monkeypatch):
 
     # Reset the MCP server state to force local mode
     from synrix_runtime.api import mcp_server
+    for adapter in list(mcp_server._runtimes.values()):
+        try:
+            adapter.delete()
+        except Exception:
+            pass
     mcp_server._client = None
     mcp_server._local_mode = False
     mcp_server._agents.clear()
@@ -28,6 +32,11 @@ def mcp_env(tmp_dir, monkeypatch):
 
     yield
 
+    for adapter in list(mcp_server._runtimes.values()):
+        try:
+            adapter.delete()
+        except Exception:
+            pass
     mcp_server._client = None
     mcp_server._local_mode = False
     mcp_server._agents.clear()
@@ -168,6 +177,15 @@ class TestMCPAgentManagement:
         assert result["logged"] is True
         assert result["decision"] == "chose_plan_B"
 
+    def test_list_agents_includes_runtime_registered_agent(self, mcp_env):
+        from synrix_runtime.api.runtime import AgentRuntime
+        from synrix_runtime.api.mcp_server import octopoda_list_agents
+
+        with AgentRuntime("runtime_registered", agent_type="test"):
+            result = octopoda_list_agents()
+
+        assert "runtime_registered" in result["agents"]
+
 
 class TestMCPRuntimeCache:
 
@@ -191,3 +209,99 @@ class TestMCPRuntimeCache:
 
         result = _parse_value("not json")
         assert result == {"value": "not json"}
+
+    def test_delete_evicts_runtime_cache(self, mcp_env):
+        from synrix_runtime.api.mcp_server import _get_runtime, _runtimes
+
+        runtime = _get_runtime("evict_me")
+        assert "evict_me" in _runtimes
+
+        runtime.delete()
+        assert "evict_me" not in _runtimes
+
+
+class TestMCPAdvancedLocalMode:
+
+    def test_related_returns_relationships(self, mcp_env):
+        from synrix_runtime.api.mcp_server import octopoda_related
+
+        result = octopoda_related("graph_agent", "missing_entity")
+        assert result["entity"] == "missing_entity"
+        assert isinstance(result["relationships"], list)
+
+    def test_forget_and_forget_stale(self, mcp_env):
+        from synrix_runtime.api.mcp_server import (
+            octopoda_remember,
+            octopoda_forget,
+            octopoda_forget_stale,
+            octopoda_recall,
+        )
+
+        octopoda_remember("forget_agent", "cleanup:key", '{"value": "gone"}')
+        forget = octopoda_forget("forget_agent", "cleanup:key")
+        assert forget["deleted"] is True
+        recall = octopoda_recall("forget_agent", "cleanup:key")
+        assert recall["found"] is False
+
+        stale = octopoda_forget_stale("forget_agent", max_age_days=1)
+        assert "deleted" in stale
+
+    def test_memory_health_and_consolidate(self, mcp_env):
+        from synrix_runtime.api.mcp_server import octopoda_remember, octopoda_memory_health, octopoda_consolidate
+
+        octopoda_remember("health_agent", "k1", '"v1"')
+        health = octopoda_memory_health("health_agent")
+        assert health["agent_id"] == "health_agent"
+        assert "health" in health
+
+        consolidation = octopoda_consolidate("health_agent", dry_run=True)
+        assert consolidation["agent_id"] == "health_agent"
+        assert "consolidation" in consolidation
+
+    def test_messaging_round_trip(self, mcp_env):
+        from synrix_runtime.api.mcp_server import octopoda_send_message, octopoda_read_messages, octopoda_broadcast
+
+        sent = octopoda_send_message("sender_agent", "receiver_agent", '{"hello": true}', message_type="alert")
+        assert sent["sent"] is True
+
+        inbox = octopoda_read_messages("receiver_agent")
+        assert inbox["count"] >= 1
+        assert inbox["messages"][0]["from_agent"] == "sender_agent"
+
+        broadcast = octopoda_broadcast("sender_agent", '"system-wide"')
+        assert broadcast["broadcast"] is True
+
+    def test_goal_round_trip(self, mcp_env):
+        from synrix_runtime.api.mcp_server import octopoda_set_goal, octopoda_get_goal, octopoda_update_progress
+
+        set_result = octopoda_set_goal("goal_agent", "Ship local parity", milestones="adapter,dashboard")
+        assert set_result["goal_set"] is True
+
+        update = octopoda_update_progress("goal_agent", milestone_index=0, note="adapter done")
+        assert "progress" in update
+
+        goal = octopoda_get_goal("goal_agent")
+        assert goal["goal"]["has_goal"] is True
+
+    def test_filtered_search_and_context(self, mcp_env):
+        from synrix_runtime.api.mcp_server import (
+            octopoda_remember,
+            octopoda_search_filtered,
+            octopoda_process_conversation,
+            octopoda_get_context,
+        )
+
+        octopoda_remember("filter_agent", "prefs:theme", '{"value": "dark mode", "__importance": "critical"}')
+        search = octopoda_search_filtered("filter_agent", query="dark", importance="critical")
+        assert search["agent_id"] == "filter_agent"
+        assert "results" in search
+
+        processed = octopoda_process_conversation(
+            "filter_agent",
+            "I prefer dark mode and concise replies",
+            "Understood, I will keep responses concise.",
+        )
+        assert processed["processed"] is True
+
+        context = octopoda_get_context("filter_agent", "dark mode", limit=5)
+        assert "context" in context

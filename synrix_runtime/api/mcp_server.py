@@ -25,6 +25,7 @@ Run standalone:
     OCTOPODA_API_KEY=sk-octopoda-... python -m synrix_runtime.api.mcp_server
 """
 import logging
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,7 @@ import json
 import time
 from collections import OrderedDict
 from mcp.server.fastmcp import FastMCP
+from synrix_runtime.extraction_config import load_local_extraction_config
 
 mcp = FastMCP("Octopoda Memory")
 
@@ -254,7 +256,7 @@ class _LocalAgentAdapter:
         return []
 
     def search(self, query, limit=10):
-        results = self._rt.search(query, limit=limit)
+        results = self._rt.recall_similar(query, limit=limit)
         if hasattr(results, 'items'):
             return results.items
         return results if isinstance(results, list) else []
@@ -283,10 +285,62 @@ class _LocalAgentAdapter:
         return self._to_dict(stats) or {}
 
     def history(self, key):
-        return self._rt.recall_history(key)
+        result = self._rt.recall_history(key)
+        result_dict = self._to_dict(result) or {}
+        return result_dict.get("versions", [])
+
+    def related(self, entity):
+        result = self._rt.related(entity)
+        result_dict = self._to_dict(result) or {}
+        return result_dict.get("relationships", [])
+
+    def process_conversation(self, messages, **kwargs):
+        return self._rt.process_conversation(messages=messages, **kwargs)
+
+    def get_context(self, query, limit=10, format="text"):
+        return self._rt.get_context(query, limit=limit, format=format)
+
+    def forget(self, key):
+        return self._rt.forget(key)
+
+    def forget_stale(self, max_age_seconds):
+        return self._rt.forget_stale(max_age_seconds)
+
+    def memory_health(self):
+        return self._rt.memory_health()
+
+    def consolidate(self, dry_run=True):
+        return self._rt.consolidate(dry_run=dry_run)
+
+    def send_message(self, to_agent, message, msg_type="info"):
+        return self._rt.send_message(to_agent, message, message_type=msg_type)
+
+    def read_messages(self, unread_only=False):
+        return self._rt.read_messages(unread_only=unread_only)
+
+    def broadcast(self, message, msg_type="info"):
+        return self._rt.broadcast(message, message_type=msg_type)
+
+    def set_goal(self, goal, milestones=None):
+        return self._rt.set_goal(goal, milestones or [])
+
+    def get_goal(self):
+        return self._rt.get_goal()
+
+    def update_progress(self, progress=None, milestone_index=None, note=None):
+        return self._rt.update_progress(progress=progress, milestone_index=milestone_index, note=note)
+
+    def search_filtered(self, query=None, tags=None, importance=None, max_age_seconds=None):
+        return self._rt.search_filtered(
+            query=query,
+            tags=tags,
+            importance=importance,
+            max_age_seconds=max_age_seconds,
+        )
 
     def delete(self):
         self._rt.shutdown()
+        _runtimes.pop(self.agent_id, None)
 
     def get_loop_status(self):
         result = self._rt.get_loop_status()
@@ -318,7 +372,12 @@ class _LocalClientAdapter:
 
     def agents(self):
         """List agents in local mode."""
-        return list(_runtimes.keys())
+        try:
+            from synrix_runtime.core.daemon import RuntimeDaemon
+            daemon = RuntimeDaemon.get_instance()
+            return [agent.get("agent_id", "") for agent in daemon.get_all_agents() if agent.get("agent_id")]
+        except Exception:
+            return list(_runtimes.keys())
 
 
 def _get_runtime(agent_id: str):
@@ -331,7 +390,7 @@ def _get_runtime(agent_id: str):
         _runtimes.popitem(last=False)
 
     from synrix_runtime.api.runtime import AgentRuntime
-    runtime = AgentRuntime(agent_id, agent_type="mcp")
+    runtime = AgentRuntime(agent_id, agent_type="mcp", require_account=False)
     adapter = _LocalAgentAdapter(runtime)
     _runtimes[agent_id] = adapter
     return adapter
@@ -523,7 +582,7 @@ def octopoda_restore(agent_id: str, label: str | None = None) -> dict:
         label: Snapshot label to restore from (latest if omitted)
     """
     agent = _get_agent(agent_id)
-    result, latency = _timed(lambda: agent.restore(label or "latest"))
+    result, latency = _timed(lambda: agent.restore(label))
     return {
         "label": label,
         "keys_restored": result.get("keys_restored", 0),
@@ -937,12 +996,12 @@ def octopoda_search_filtered(agent_id: str, query: str | None = None,
 # -----------------------------------------------------------------------
 
 def main():
-    """Run the MCP server (stdio transport).
+    """Run the MCP server (stdio transport)."""
+    try:
+        load_local_extraction_config()
+    except Exception as e:
+        print(f"Extraction config: {e}", file=sys.stderr)
 
-    Works in two modes:
-    - Cloud: set OCTOPODA_API_KEY to a real key (sk-octopoda-...)
-    - Local: leave OCTOPODA_API_KEY unset (or any non-real value) — uses local SQLite
-    """
     import sys
     api_key = os.environ.get("OCTOPODA_API_KEY", "")
     if not api_key:

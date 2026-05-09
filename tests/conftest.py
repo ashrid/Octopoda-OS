@@ -85,8 +85,13 @@ def agent_runtime(tmp_dir, monkeypatch):
 
     from synrix_runtime.core.daemon import RuntimeDaemon
     from synrix_runtime.monitoring.metrics import MetricsCollector
+    from synrix_runtime.dashboard import api_routes as dashboard_api_routes
     RuntimeDaemon.reset_instance()
     MetricsCollector._instance = None
+    dashboard_api_routes._backend = None
+
+    from synrix_runtime.dashboard import api_routes as dashboard_api_routes
+    dashboard_api_routes._backend = None
 
     from synrix_runtime.api.runtime import AgentRuntime
     rt = AgentRuntime("test_agent", agent_type="test")
@@ -105,8 +110,10 @@ def api_client(tmp_dir, monkeypatch):
 
     from synrix_runtime.core.daemon import RuntimeDaemon
     from synrix_runtime.monitoring.metrics import MetricsCollector
+    from synrix_runtime.dashboard import api_routes as dashboard_api_routes
     RuntimeDaemon.reset_instance()
     MetricsCollector._instance = None
+    dashboard_api_routes._backend = None
 
     daemon = RuntimeDaemon.get_instance()
     daemon.start()
@@ -125,6 +132,36 @@ def api_client(tmp_dir, monkeypatch):
     daemon.shutdown()
     RuntimeDaemon.reset_instance()
     MetricsCollector._instance = None
+    dashboard_api_routes._backend = None
+
+
+@pytest.fixture
+def flask_client(tmp_dir, monkeypatch):
+    """Provide a Flask test client for the local 7842 dashboard routes."""
+    monkeypatch.setenv("SYNRIX_BACKEND", "sqlite")
+    monkeypatch.setenv("SYNRIX_DATA_DIR", tmp_dir)
+    monkeypatch.delenv("OCTOPODA_API_KEY", raising=False)
+
+    from synrix_runtime.core.daemon import RuntimeDaemon
+    from synrix_runtime.monitoring.metrics import MetricsCollector
+    from synrix_runtime.dashboard import api_routes as dashboard_api_routes
+    RuntimeDaemon.reset_instance()
+    MetricsCollector._instance = None
+    dashboard_api_routes._backend = None
+
+    daemon = RuntimeDaemon.get_instance()
+    daemon.start()
+
+    from synrix_runtime.dashboard.app import create_app
+    app = create_app()
+    app.config.update(TESTING=True)
+    client = app.test_client()
+    yield client
+
+    daemon.shutdown()
+    RuntimeDaemon.reset_instance()
+    MetricsCollector._instance = None
+    dashboard_api_routes._backend = None
 
 
 @pytest.fixture
