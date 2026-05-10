@@ -156,16 +156,19 @@ def settings_status():
 @api.route("/api/overview")
 def overview():
     try:
-        backend = get_backend()
         db_path = _sqlite_db_path()
-        nodes = len(backend.query_prefix("", limit=100000))
-        shared_spaces = len(backend.query_prefix("shared:", limit=500))
+        nodes = 0
+        shared_spaces = 0
         db_bytes = os.path.getsize(db_path) if db_path and os.path.exists(db_path) else 0
         growth = []
         if db_path and os.path.exists(db_path):
             conn = sqlite3.connect(db_path)
             conn.row_factory = sqlite3.Row
             cur = conn.cursor()
+            cur.execute("SELECT COUNT(*) FROM nodes")
+            nodes = cur.fetchone()[0]
+            cur.execute("SELECT COUNT(*) FROM nodes WHERE name LIKE 'shared:%'")
+            shared_spaces = cur.fetchone()[0]
             cur.execute("SELECT DATE(created_at,'unixepoch') as day, COUNT(*) as cnt FROM nodes GROUP BY day ORDER BY day LIMIT 30")
             growth = [{"day": row["day"], "count": row["cnt"]} for row in cur.fetchall()]
             conn.close()
